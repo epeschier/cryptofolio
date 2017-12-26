@@ -14,7 +14,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col"><a href="#" (click)="openModal(template)"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a></th>
+        <th scope="col"><a href="#" (click)="openModal(template, editmode.buy)"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a></th>
         <th scope="col" class="text-left">Coin</th>
         <th scope="col" class="text-right"></th>
         <th scope="col" class="text-right"></th>
@@ -22,6 +22,7 @@
         <th scope="col" class="text-right">Value</th>
         <th scope="col" class="text-right">Profit</th>
         <th scope="col" class="text-right">Buy Price</th>
+        <th scope="col" class="text-right">List Price</th>
         <th scope="col" class="text-right">Change</th>
       </tr>
     </thead>
@@ -31,25 +32,26 @@
         <th scope="row"><i class="cc {{item.coin}}" title="BTC"></i></th>
         <td class="text-left">{{item.coin}}</td>
         <td class="">
-          <a href="#" (click)="openModal(template)" ><i class="fa fa-pencil-square fa-2x" aria-hidden="true"></i></a>
+          <a href="#" (click)="openModal(template, editmode.edit)" ><i class="fa fa-pencil-square fa-2x" aria-hidden="true"></i></a>
         </td>
         <td class="">
-          <a href="#" (click)="openModal(template)" ><i class="fa fa-minus-square fa-2x" aria-hidden="true"></i></a>
+          <a href="#" (click)="openModal(template, editmode.sell)" ><i class="fa fa-minus-square fa-2x" aria-hidden="true"></i></a>
         </td>
         <td class="text-right">{{item.amount}}</td>
         <td class="text-right">{{item.value | currency}}</td>
-        <td class="text-right alert-success">{{item.profit | currency}}</td>
+        <td class="text-right" [ngClass]="{'alert-success':item.profit > 0, 'alert-danger':item.profit < 0}">{{item.profit | currency}}</td>
         <td class="text-right">{{item.price | currency}}</td>
-        <td class="text-right alert-success"><i class="fa fa-caret-up" aria-hidden="true"></i> {{item.change}}</td>
+        <td class="text-right">{{item.listPrice | currency}}</td>
+        <td class="text-right" [ngClass]="{'alert-success':item.profit > 0, 'alert-danger':item.profit < 0}">
+          <i class="fa" [ngClass]="{'fa-caret-up':item.profit > 0, 'fa-caret-down':item.profit < 0}"aria-hidden="true"></i> {{item.profitPercentage | number:0}}%</td>
       </tr>
 
     </tbody>
   </table>
 
-
   <ng-template #template>
       <div class="modal-header">
-          <h4 class="modal-title pull-left">Edit Transaction</h4>
+          <h4 class="modal-title pull-left">{{TransactionName.get(editmode.sell)}}</h4>
           <button type="button" class="close pull-right" 
                   aria-label="Close" (click)="modalRef.hide()">
         <span aria-hidden="true">&times;</span>
@@ -62,30 +64,39 @@
             <label for="coin" class="col-sm-4 col-form-label">Coin</label>
             <div class="col-sm-8">
               <input type="text" class="form-control"
-                [(ngModel)]="selected"
+                [(ngModel)]="transaction.coin"
                 [typeahead]="coins"
                 name="coin"
                 placeholder="Select coin...">
-      
             </div>
           </div>
 
           <div class="form-group row">
             <label for="amount" class="col-sm-4 col-form-label">Amount</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="amount" placeholder="Amount">
+              <input type="text" class="form-control" 
+                [(ngModel)]="transaction.amount"
+                name="amount"
+                id="amount" placeholder="Amount">
             </div>
           </div>
 
           <div class="form-group row">
             <label for="price" class="col-sm-4 col-form-label">Price</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="amount" placeholder="Price">
+              <input type="text" class="form-control" 
+                [(ngModel)]="transaction.price"
+                name="price"
+                id="price" placeholder="Price">
             </div>
           </div>
 
-          <div class="row justify-content-end">
-              <button id="savebutton" name="savebutton" class="btn btn-primary">Save</button>
+          <div class="row">
+            <div class="col-sm-12">
+              <button id="savebutton" name="savebutton" 
+                (click)="saveTransaction()"
+                class="btn btn-primary pull-right">Save</button>
+            </div>
           </div>
         </form>
 

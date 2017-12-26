@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { CoinService } from './services/coin.service';
+import { PortfolioService } from './services/portfolio.service';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { CoinService } from './services/coin.service';
     TypeaheadModule.forRoot(),
     FormsModule
   ],
-  providers: [CoinService],
+  providers: [CoinService, PortfolioService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
