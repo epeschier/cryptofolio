@@ -17,7 +17,6 @@
         <th scope="col"><a href="#" (click)="openModal(template, editmode.buy)"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a></th>
         <th scope="col" class="text-left">Coin</th>
         <th scope="col" class="text-right"></th>
-        <th scope="col" class="text-right"></th>
         <th scope="col" class="text-right">Amount</th>
         <th scope="col" class="text-right">Value</th>
         <th scope="col" class="text-right">Profit</th>
@@ -34,9 +33,6 @@
         <td class="">
           <a href="#" (click)="openModal(template, editmode.edit)" ><i class="fa fa-pencil-square fa-2x" aria-hidden="true"></i></a>
         </td>
-        <td class="">
-          <a href="#" (click)="openModal(template, editmode.sell)" ><i class="fa fa-minus-square fa-2x" aria-hidden="true"></i></a>
-        </td>
         <td class="text-right">{{item.amount}}</td>
         <td class="text-right">{{item.value | currency}}</td>
         <td class="text-right" [ngClass]="{'alert-success':item.profit > 0, 'alert-danger':item.profit < 0}">{{item.profit | currency}}</td>
@@ -51,7 +47,7 @@
 
   <ng-template #template>
       <div class="modal-header">
-          <h4 class="modal-title pull-left">{{TransactionName.get(editmode.sell)}}</h4>
+          <h4 class="modal-title pull-left">Add Transaction</h4>
           <button type="button" class="close pull-right" 
                   aria-label="Close" (click)="modalRef.hide()">
         <span aria-hidden="true">&times;</span>
@@ -84,12 +80,27 @@
           <div class="form-group row">
             <label for="price" class="col-sm-4 col-form-label">Price</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" 
-                [(ngModel)]="transaction.price"
-                name="price"
-                id="price" placeholder="Price">
+                <div class="input-group">
+                  <span class="input-group-addon">$</span>
+                  <input type="text" class="form-control" 
+                    [(ngModel)]="transaction.price"
+                    name="price"
+                    id="price" placeholder="Price">
+              </div>
             </div>
           </div>
+
+          <div class="form-group row">
+            <label for="date" class="col-sm-4 col-form-label">Date</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" 
+                name="date"
+                id="date" 
+                #dp="bsDatepicker"
+                bsDatepicker [(bsValue)]="transaction.date"
+                placeholder="">
+            </div>
+          </div>          
 
           <div class="row">
             <div class="col-sm-12">

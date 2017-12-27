@@ -1,9 +1,10 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CoinService } from '../app/services/coin.service'
+import { CoinService } from '../app/services/coin.service';
 import { EditMode } from '../app/editmode';
 import { Transaction } from '../app/services/transaction';
 import { PortfolioService } from '../app/services/portfolio.service';
+
 
 @Component({
   selector: 'app-root',
@@ -23,10 +24,10 @@ export class AppComponent {
   coins: string[];
 
   portfolio: Transaction[];
-  
+
    public modalRef: BsModalRef;
 
-    constructor(private modalService: BsModalService, 
+    constructor(private modalService: BsModalService,
       private coinService: CoinService,
       private portfolioService: PortfolioService) {
 
@@ -42,6 +43,7 @@ export class AppComponent {
   }
 
   public openModal(template: TemplateRef<any>, action: EditMode) {
+    this.transaction.date = new Date();
     this.modalRef = this.modalService.show(template);
   }
 
@@ -51,7 +53,7 @@ export class AppComponent {
   }
 
   private formatCoins(data: any): string[] {
-    var list: string[] = [];
+    let list: string[] = [];
 
     for (var key in data) {
       list.push(data[key] + ' (' + key + ')');
