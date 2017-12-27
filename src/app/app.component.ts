@@ -32,6 +32,7 @@ export class AppComponent {
       private portfolioService: PortfolioService) {
 
       this.transaction = new Transaction();
+      this.transaction.buy = true;
     coinService.getAll().then(res => {
        this.coins = this.formatCoins(res);
     });

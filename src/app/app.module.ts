@@ -7,6 +7,8 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
+import { JWBootstrapSwitchModule } from 'jw-bootstrap-switch-ng2';
+
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FormsModule } from '@angular/forms';
@@ -28,7 +30,8 @@ import { PortfolioService } from './services/portfolio.service';
     ModalModule.forRoot(),
     TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    FormsModule
+    FormsModule,
+    JWBootstrapSwitchModule
   ],
   providers: [CoinService, PortfolioService],
   bootstrap: [AppComponent]

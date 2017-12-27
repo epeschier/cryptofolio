@@ -1,4 +1,5 @@
 export class Transaction {
+    buy: boolean;       // Buy = True, Sell = False
     coin: string;
     amount: number;
     price: number;

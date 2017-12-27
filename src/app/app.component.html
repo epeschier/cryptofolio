@@ -56,6 +56,20 @@
       <div class="modal-body">
 
         <form>
+
+          <div class="form-group row">
+            <label for="transactiontype" class="col-sm-4 col-form-label">Transaction</label>
+            <div class="col-sm-8">
+                <bSwitch class="pull-left" 
+                  [(ngModel)]="transaction.buy"
+                  switch-on-color="success"
+                  switch-off-color="danger"
+                  switch-off-text="Sell" 
+                  switch-on-text="Buy" 
+                  name="transactiontype"></bSwitch>
+            </div>
+          </div>
+
           <div class="form-group row">
             <label for="coin" class="col-sm-4 col-form-label">Coin</label>
             <div class="col-sm-8">
