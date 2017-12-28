@@ -1,10 +1,11 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, transition } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CoinService } from '../app/services/coin.service';
 import { EditMode } from '../app/editmode';
-import { Transaction } from '../app/services/transaction';
+import { Transaction, Position } from '../app/services/transaction';
 import { PortfolioService } from '../app/services/portfolio.service';
-
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NumberValidators } from '../app/helpers/numberValidators';
 
 @Component({
   selector: 'app-root',
@@ -18,21 +19,23 @@ export class AppComponent {
     [ EditMode.sell, 'Sell']
   ]);
 
-  transaction: Transaction;
   editmode = EditMode;
+  transaction: Transaction;
   selected: string;
   coins: string[];
+  form: FormGroup;
+  formSubmitted: boolean;
+  isEditing: boolean;
 
-  portfolio: Transaction[];
+  portfolio: Position[];
 
    public modalRef: BsModalRef;
 
     constructor(private modalService: BsModalService,
       private coinService: CoinService,
-      private portfolioService: PortfolioService) {
+      private portfolioService: PortfolioService,
+      private formBuilder: FormBuilder) {
 
-      this.transaction = new Transaction();
-      this.transaction.buy = true;
     coinService.getAll().then(res => {
        this.coins = this.formatCoins(res);
     });
@@ -43,22 +46,64 @@ export class AppComponent {
 
   }
 
-  public openModal(template: TemplateRef<any>, action: EditMode) {
-    this.transaction.date = new Date();
+  public openModal(template: TemplateRef<any>, action: EditMode, id?: number) {
+    this.isEditing = action === EditMode.edit;
+    if (action === EditMode.edit) {
+      // Fill in values.
+      this.transaction = this.portfolio.find(x => x.id === id);
+
+    } else {
+      this.transaction = new Transaction();
+      this.transaction.date = new Date();
+    }
+
+    this.form = this.formBuilder.group({
+      transactiontype: [true, Validators.required],
+      coin: [this.transaction.coin, Validators.required],
+      amount: [this.transaction.amount, [Validators.required, NumberValidators.isNumber()]],
+      price: [this.transaction.price, [Validators.required, NumberValidators.isNumber()]],
+      date: [this.transaction.date]
+    });
+
     this.modalRef = this.modalService.show(template);
   }
 
-  public saveTransaction() {
-    console.log(this.transaction);
-    this.modalRef.hide();
+  public submitForm(form: any) {
+    this.formSubmitted = true;
+
+    if (form.valid) {
+      this.transaction.buy = form.value.transactiontype;
+      this.transaction.coin = this.getCoinTicker(form.value.coin);
+      this.transaction.amount = form.value.amount;
+      this.transaction.price = form.value.price;
+      this.transaction.date = form.value.date;
+
+      if (this.isEditing) {
+        this.portfolioService.updatePosition(this.transaction);
+      } else {
+        this.portfolioService.addTransaction(this.transaction);
+      }
+
+      this.modalRef.hide();
+      this.formSubmitted = false;
+    }
+  }
+
+  private getCoinTicker(coin: string): string {
+    const regex = /\((.*)\)/g;
+    let match;
+    if ((match = regex.exec(coin)) !== null) {
+      return match[1];
+    }
+    return coin;
   }
 
   private formatCoins(data: any): string[] {
-    let list: string[] = [];
+    const list: string[] = [];
 
-    for (var key in data) {
+    for (const key of Object.keys(data)) {
       list.push(data[key] + ' (' + key + ')');
-    };
+    }
 
     return list;
   }

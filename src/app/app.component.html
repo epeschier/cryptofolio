@@ -31,7 +31,7 @@
         <th scope="row"><i class="cc {{item.coin}}" title="BTC"></i></th>
         <td class="text-left">{{item.coin}}</td>
         <td class="">
-          <a href="#" (click)="openModal(template, editmode.edit)" ><i class="fa fa-pencil-square fa-2x" aria-hidden="true"></i></a>
+          <a href="#" (click)="openModal(template, editmode.edit, item.id)" ><i class="fa fa-pencil-square fa-2x" aria-hidden="true"></i></a>
         </td>
         <td class="text-right">{{item.amount}}</td>
         <td class="text-right">{{item.value | currency}}</td>
@@ -55,51 +55,75 @@
       </div>
       <div class="modal-body">
 
-        <form>
+        <form [formGroup]="form" (ngSubmit)="submitForm(form)" [ngClass]="{'was-validated':formSubmitted}" novalidate>
 
-          <div class="form-group row">
+          <div class="form-group row" [hidden]="isEditing">
             <label for="transactiontype" class="col-sm-4 col-form-label">Transaction</label>
             <div class="col-sm-8">
                 <bSwitch class="pull-left" 
-                  [(ngModel)]="transaction.buy"
                   switch-on-color="success"
                   switch-off-color="danger"
                   switch-off-text="Sell" 
                   switch-on-text="Buy" 
-                  name="transactiontype"></bSwitch>
+                  name="transactiontype"
+                  formControlName="transactiontype"
+                  [formControl]="form.controls['transactiontype']"></bSwitch>
             </div>
           </div>
-
+          
           <div class="form-group row">
-            <label for="coin" class="col-sm-4 col-form-label">Coin</label>
+            <label for="coin" class="col-sm-4 col-form-label required">Coin</label>
             <div class="col-sm-8">
               <input type="text" class="form-control"
-                [(ngModel)]="transaction.coin"
                 [typeahead]="coins"
                 name="coin"
-                placeholder="Select coin...">
+                placeholder="Select coin..."
+                formControlName="coin"
+                [formControl]="form.controls['coin']"
+                required>
+
+              <div class="invalid-feedback pull-left" 
+                [hidden]="!(form.controls.coin.invalid && (form.controls.coin.dirty || form.controls.coin.touched || formSubmitted))">
+                Coin is required.
+              </div>          
             </div>
           </div>
 
-          <div class="form-group row">
-            <label for="amount" class="col-sm-4 col-form-label">Amount</label>
+          <div class="form-group row" >
+            <label for="amount" class="col-sm-4 col-form-label required">Amount</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" 
-                [(ngModel)]="transaction.amount"
                 name="amount"
-                id="amount" placeholder="Amount">
+                id="amount"
+                placeholder="Amount"
+                formControlName="amount"
+                [formControl]="form.controls['amount']"
+                >
+
+                <div class="invalid-feedback pull-left" 
+                  [hidden]="!(form.controls.amount.invalid && (form.controls.amount.dirty || form.controls.amount.touched || formSubmitted))">
+                  Please provide a valid amount.
+                </div>
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="price" class="col-sm-4 col-form-label">Price</label>
+            <label for="price" class="col-sm-4 col-form-label required">Price</label>
             <div class="col-sm-8">
-                <div class="input-group">
-                  <span class="input-group-addon">$</span>
-                  <input type="text" class="form-control" 
-                    [(ngModel)]="transaction.price"
-                    name="price"
-                    id="price" placeholder="Price">
+              <div class="input-group">
+                <span class="input-group-addon">$</span>
+                <input type="text" class="form-control" 
+                  name="price"
+                  id="price" 
+                  placeholder="Price"
+                  formControlName="price"
+                  [formControl]="form.controls['price']"
+                  required>
+              </div>
+
+              <div class="invalid-feedback pull-left" 
+                [hidden]="!(form.controls.price.invalid && (form.controls.price.dirty || form.controls.price.touched || formSubmitted))">
+                Please provide a valid price.
               </div>
             </div>
           </div>
@@ -112,14 +136,15 @@
                 id="date" 
                 #dp="bsDatepicker"
                 bsDatepicker [(bsValue)]="transaction.date"
-                placeholder="">
+                placeholder=""
+                formControlName="date"
+                [formControl]="form.controls['date']">
             </div>
-          </div>          
+          </div>
 
           <div class="row">
             <div class="col-sm-12">
-              <button id="savebutton" name="savebutton" 
-                (click)="saveTransaction()"
+              <button id="savebutton" name="savebutton" type="submit" 
                 class="btn btn-primary pull-right">Save</button>
             </div>
           </div>

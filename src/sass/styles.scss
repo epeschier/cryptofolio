@@ -7,7 +7,8 @@
   '~bootstrap/scss/mixins',
   '~bootstrap/scss/print',
   '~bootstrap/scss/reboot',
-  '~bootstrap/scss/type';
+  '~bootstrap/scss/type',
+  '~bootstrap/scss/forms';
 
 html,
 body {
@@ -38,41 +39,19 @@ a:not(.disabled) {
   }
 }
 
-/* Cards dark */
-.card.dark {
-  background-color: #303030;
-  background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.25rem;
+.col-form-label {
+  text-align: right;
 
-  .card-header {
-    background-color: #444;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-  }
-  
-  .card-body {
-    padding: 1.25rem;
+  &.required:after { 
+    color: #d00;
+    content: "*";
+    position: absolute;
+    margin-left: 5px;
+    top:7px;
   }
 }
 
-/* Table Dark */
-.table.dark {
-  background-color: #303030;
-  background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.25rem;
-  
-  thead tr {
-    background-color: #444;
-  }
-
-  thead th {
-    border-top: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-  }
-}
-
-.glowing-border {
-
-  box-shadow: 0 0 10px rgb(221, 108, 16);
+/* Fix display validation line input-group. */
+.invalid-feedback {
+  display: block;
 }

@@ -16,9 +16,9 @@ export class Position extends Transaction {
     id: number;
     listPrice: number;      // Current price.
 
-    public constructor (coin: string, amount: number, price: number, listPrice: number) {
+    public constructor (coin: string, amount: number, price: number, listPrice?: number) {
         super(coin, amount, price);
-        this.listPrice = listPrice;
+        this.listPrice = listPrice || price;
     }
 
     // Current position value.

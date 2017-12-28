@@ -11,7 +11,7 @@ import { JWBootstrapSwitchModule } from 'jw-bootstrap-switch-ng2';
 
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { CoinService } from './services/coin.service';
@@ -30,7 +30,7 @@ import { PortfolioService } from './services/portfolio.service';
     ModalModule.forRoot(),
     TypeaheadModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    FormsModule,
+    FormsModule, ReactiveFormsModule,
     JWBootstrapSwitchModule
   ],
   providers: [CoinService, PortfolioService],
